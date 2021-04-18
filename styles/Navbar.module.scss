@@ -1,0 +1,28 @@
+.navbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 10px;
+    background-color: white;
+    position: sticky;
+    top: 0;
+
+    .logo {
+        font-weight: bold;
+        font-size: 36px;
+        margin: 0 20px;
+    }
+
+    .links {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        a {
+            margin: 0 20px;
+            font-size: 18px;
+        }
+    }
+}
