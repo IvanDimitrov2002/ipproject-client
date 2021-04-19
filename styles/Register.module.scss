@@ -18,9 +18,10 @@
         align-items: center;
         padding: 0 50px 30px;
         border-radius: 10px;
-        box-shadow: $card-shadow;
+        box-shadow: $main-shadow;
 
         .submit {
+            margin-top: 10px;
             align-self: stretch;
         }
 

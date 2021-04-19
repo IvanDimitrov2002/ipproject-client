@@ -29,7 +29,7 @@ const Login: FunctionComponent = () => {
     };
 
     return (
-        <div className={styles.container}>
+        <main className={styles.container}>
             <h1 className={styles.heading}>survey.io</h1>
             <form onSubmit={submit} className={styles.form}>
                 <span className={styles.title}>login</span>
@@ -55,7 +55,7 @@ const Login: FunctionComponent = () => {
                     <Link href='/register'>register</Link>
                 </span>
             </form>
-        </div>
+        </main>
     );
 };
 

@@ -24,7 +24,7 @@ const Register: FunctionComponent = () => {
     };
 
     return (
-        <div className={styles.container}>
+        <main className={styles.container}>
             <h1 className={styles.heading}>survey.io</h1>
             <form onSubmit={submit} className={styles.form}>
                 <span className={styles.title}>register</span>
@@ -50,7 +50,7 @@ const Register: FunctionComponent = () => {
                     <Link href='/login'>login</Link>
                 </span>
             </form>
-        </div>
+        </main>
     );
 };
 

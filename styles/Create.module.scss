@@ -1,0 +1,80 @@
+@import 'variables';
+
+.container {
+    text-align: center;
+
+    .heading {
+        margin-top: 100px;
+    }
+
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+
+        .name-container {
+            margin: 0 auto;
+            width: 100%;
+
+            .name {
+                width: 100%;
+
+                font-size: 24px;
+            }
+        }
+
+        .question-container {
+            margin: 50px auto 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+
+            .question {
+                width: 100%;
+                font-size: 20px;
+            }
+
+            .question-checkbox {
+                margin-left: 20px;
+            }
+
+            .add-answer {
+                margin-left: 10px;
+                width: 60px;
+                font-size: 24px;
+                padding: 5px 0;
+            }
+        }
+
+        .answer-container {
+            margin: 30px auto 0;
+            width: 100%;
+
+            .answer {
+                width: 100%;
+            }
+        }
+
+        .action-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+
+            .checkbox {
+                font-size: 18px;
+            }
+
+            & > * {
+                margin: 0 15px;
+            }
+
+            .add {
+                width: 70px;
+                font-size: 25px;
+                padding: 5px 0;
+            }
+        }
+    }
+}

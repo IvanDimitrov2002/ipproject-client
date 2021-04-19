@@ -1,11 +1,11 @@
 export interface User {
-    id: number;
+    id?: number;
     surveys: Survey[];
     username: string;
 }
 
 export interface Survey {
-    id: number;
+    id?: number;
     privateId: string;
     name: string;
     questions: Question[];
@@ -13,18 +13,19 @@ export interface Survey {
 }
 
 export interface Question {
-    id: number;
+    id?: number;
     question: string;
     answers: Answer[];
     required: boolean;
     multiple: boolean;
     photo: string;
+    [key: string]: any;
 }
 
 export interface Answer {
-    id: number;
+    id?: number;
     answer: string;
-    votes: number;
+    votes?: number;
 }
 
 export interface Token {
