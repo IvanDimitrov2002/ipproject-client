@@ -26,6 +26,7 @@ export interface Answer {
     id?: number;
     answer: string;
     votes?: number;
+    [key: string]: any;
 }
 
 export interface Token {

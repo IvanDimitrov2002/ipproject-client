@@ -7,15 +7,13 @@ import {
     useEffect,
     useState,
 } from 'react';
-import styles from 'styles/Survey.module.scss';
+import styles from 'styles/Vote.module.scss';
 import { Survey } from 'utils/interfaces';
-import { useAuth } from 'utils/useAuth';
 import Image from 'next/image';
 
-const View: FunctionComponent = () => {
+const Vote: FunctionComponent = () => {
     const router = useRouter();
     const { id } = router.query;
-    const { user } = useAuth(false);
     const [survey, setSurvey] = useState<Survey | undefined>();
     const [success, setSuccess] = useState('');
 
@@ -23,7 +21,7 @@ const View: FunctionComponent = () => {
         (async () => {
             if (id) {
                 const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL}/survey/${id}`
+                    `${process.env.NEXT_PUBLIC_API_URL}/vote/${id}`
                 );
                 const data = await response.json();
                 setSurvey(data);
@@ -31,36 +29,62 @@ const View: FunctionComponent = () => {
         })();
     }, [id]);
 
+    const onCheck = (e: any) => {
+        const tmp = survey;
+        tmp?.questions?.forEach((question) => {
+            question?.answers.forEach((answer) => {
+                if (answer.id === parseInt(e.target.value)) {
+                    answer.checked = e.target.checked;
+                }
+            });
+        });
+        setSurvey(tmp);
+    };
+
     const submit = async (e: FormEvent) => {
         e.preventDefault();
-        const token = localStorage.getItem('token');
-        if (user && token) {
+        const requirement = survey?.questions
+            .filter((question) => question.required)
+            .map((question) =>
+                question.answers.some((answer) => answer.checked)
+            )
+            .every((value) => value === true);
+        if (requirement) {
             try {
-                await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL}/survey/${survey?.id}`,
-                    {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${token}`,
-                        },
-                        body: JSON.stringify(survey),
-                    }
-                );
-                setSuccess('successfully updated the survey');
+                await fetch(`${process.env.NEXT_PUBLIC_API_URL}/vote`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(
+                        survey?.questions
+                            .map((question) =>
+                                question.answers
+                                    .filter((answer) => answer.checked)
+                                    .map((answer) => answer.id)
+                            )
+                            .flat()
+                    ),
+                });
+                setSuccess('successfully voted for the survey');
             } catch (error) {
                 console.log(error);
             }
+        } else {
+            setSuccess('answer every required question');
         }
     };
 
     return (
         <>
             <Navbar />
-            {survey && (
+            {survey && survey.open ? (
                 <main className={styles.container}>
-                    <h1 className={styles.heading}>view survey</h1>
-                    <div className={styles['form-container']}>
+                    <h1 className={styles.heading}>vote for survey</h1>
+                    <form
+                        onSubmit={submit}
+                        className={styles['form-container']}
+                    >
                         <div className={styles['name-container']}>
                             <div
                                 className={`textfield ${styles.name}`}
@@ -122,46 +146,47 @@ const View: FunctionComponent = () => {
                                             >
                                                 {answer.answer}
                                             </div>
-                                            <div
+                                            <label
+                                                key={j}
                                                 className={`textfield ${styles.votes}`}
                                             >
-                                                {answer.votes}
-                                            </div>
+                                                <input
+                                                    required={
+                                                        question.required &&
+                                                        !question.multiple
+                                                    }
+                                                    type={
+                                                        question.multiple
+                                                            ? 'checkbox'
+                                                            : 'radio'
+                                                    }
+                                                    value={answer.id}
+                                                    onChange={onCheck}
+                                                    name={`answers${i}`}
+                                                />
+                                            </label>
                                         </div>
                                     ))}
                             </Fragment>
                         ))}
                         <div className={styles['action-container']}>
-                            {user && (
-                                <button
-                                    type='submit'
-                                    className={`button ${styles.submit}`}
-                                    onClick={submit}
-                                >
-                                    submit
-                                </button>
-                            )}
-                            <label className={styles.checkbox}>
-                                <input
-                                    type='checkbox'
-                                    checked={survey.open}
-                                    onChange={(e) =>
-                                        setSurvey({
-                                            ...survey,
-                                            open: e.target.checked,
-                                        })
-                                    }
-                                    name='open'
-                                />{' '}
-                                open
-                            </label>
+                            <button
+                                type='submit'
+                                className={`button ${styles.submit}`}
+                            >
+                                submit
+                            </button>
                         </div>
                         {success && <p>{success}</p>}
-                    </div>
+                    </form>
+                </main>
+            ) : (
+                <main className={styles.container}>
+                    <h1 className={styles.heading}>this survey is closed</h1>
                 </main>
             )}
         </>
     );
 };
 
-export default View;
+export default Vote;
